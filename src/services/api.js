@@ -24,6 +24,10 @@ export const login = (credentials) => request('/login', {
     body: JSON.stringify(credentials)
 });
 
+export const logout = () => request('/logout', {
+    method: 'POST'
+});
+
 export const registerUser = (userData) => request('/register', {
     method: 'POST',
     body: JSON.stringify(userData)

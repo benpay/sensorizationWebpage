@@ -3,6 +3,7 @@ import './App.css';
 import { RegisterForm } from './components/Forms/Register/RegisterForm';
 import { LoginForm } from './components/Forms/Login/LoginForm';
 import { SidebarComponent } from './components/Sensors/Sidebar/Sidebar';
+import { logout } from './services/api';
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
@@ -12,9 +13,17 @@ function App() {
     setIsLogin(prev => !prev);
   };
 
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } finally {
+      setIsAuthenticated(false);
+    }
+  };
+
   if (isAuthenticated) {
     return (
-      <SidebarComponent onLogout={() => setIsAuthenticated(false)} />
+      <SidebarComponent onLogout={handleLogout} />
     );
   }
 

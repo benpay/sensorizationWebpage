@@ -1,70 +1,127 @@
-# Getting Started with Create React App
+# Sensorization Frontend 📡
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Plataforma web para la gestión, administración e ingesta de datos de sensores IoT desarrollada en **React**.
 
-## Available Scripts
+Este proyecto proporciona una interfaz gráfica intuitiva y moderna que permite gestionar el ciclo de vida de los sensores (alta, consulta, modificación y borrado) así como realizar ingestas manuales de telemetría en formato JSON hacia el backend centralizado.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Características Principales
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🔐 **Autenticación de Usuarios**:
+  - Registro de nuevos usuarios (`RegisterForm`).
+  - Inicio de sesión con gestión de sesión (`LoginForm`).
+- 🛠️ **Gestión de Sensores (CRUD)**:
+  - **Añadir**: Registro de sensores especificando nombre, código, tipo (`HTTP_POLL`, `MANUAL_UPLOAD`), estado (`ACTIVE`, `PAUSED`) y URL de origen.
+  - **Actualizar**: Modificación de sensores existentes a través de su identificador único (UUID).
+  - **Buscar**: Consulta detallada de datos de un sensor específico por UUID.
+  - **Listar**: Visualización global de todos los sensores registrados en la base de datos.
+  - **Eliminar**: Borrado seguro de sensores por UUID.
+- 📤 **Ingesta de Datos**:
+  - Interfaz para el envío de payloads en formato JSON asociados al UUID de un sensor específico (`Ingestion`).
+- 🎨 **Panel de Control (Dashboard)**:
+  - Navegación lateral integrada (`Sidebar`) con iconos explicativos.
+  - Control de sesión de usuario y diseño adaptable.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🛠️ Tecnologías Utilizadas
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- **Core**: [React 19](https://react.dev/)
+- **Iconografía**: [Lucide React](https://lucide.dev/)
+- **Estilos**: CSS3 con diseño personalizado (Dark Theme)
+- **Cliente HTTP**: Fetch API nativo con integración de credenciales (`credentials: 'include'`)
+- **Herramienta de Construcción**: `react-scripts` (Create React App)
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📁 Estructura del Proyecto
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```text
+sensorization/
+├── public/                # Archivos públicos de la aplicación
+├── src/
+│   ├── components/
+│   │   ├── Forms/         # Formularios de autenticación (Login, Registro)
+│   │   │   ├── Login/
+│   │   │   ├── Register/
+│   │   │   └── FormStyle.css
+│   │   └── Sensors/       # Componentes de gestión e ingesta de sensores
+│   │       ├── Ingest/    # Módulo de ingesta manual de datos
+│   │       ├── Sensors/   # Formularios y listas de sensores
+│   │       └── Sidebar/   # Menú de navegación lateral y cabecera
+│   ├── services/
+│   │   └── api.js         # Servicio centralizado de peticiones HTTP a la API
+│   ├── App.js             # Componente principal y control de autenticación
+│   ├── App.css            # Estilos globales de la app
+│   └── index.js           # Punto de entrada de React
+├── package.json
+└── README.md
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 🔌 Integración con la API Backend
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+El frontend se comunica de forma predeterminada con una API REST backend alojada en `http://localhost:5000`.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+| Módulo | Método | Endpoint | Descripción |
+| :--- | :--- | :--- | :--- |
+| **Auth** | `POST` | `/login` | Autenticación de usuarios |
+| **Auth** | `POST` | `/logout` | Cierre de sesión de usuarios |
+| **Auth** | `POST` | `/register` | Registro de nuevos usuarios |
+| **Sensors** | `POST` | `/sensors/registerSensor` | Registro de un nuevo sensor |
+| **Sensors** | `PATCH` | `/sensors/updateSensorById/:id` | Actualización de datos de un sensor |
+| **Sensors** | `GET` | `/sensors/getSensors` | Obtención del listado de sensores |
+| **Sensors** | `GET` | `/sensors/getSensorById/:id` | Consulta de un sensor por UUID |
+| **Sensors** | `DELETE` | `/sensors/deleteSensorById/:id` | Borrado de un sensor por UUID |
+| **Ingestion** | `POST` | `/ingestion/ingest/:id/ingest` | Ingesta de payload JSON por UUID |
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## 📋 Requisitos Previos
 
-## Learn More
+- **Node.js**: `v18.0.0` o superior
+- **npm**: `v9.0.0` o superior
+- **Servidor Backend**: Debe estar ejecutándose en `http://localhost:5000` (o configurar la variable base en `src/services/api.js`).
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+---
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## ⚙️ Instalación y Puesta en Marcha
 
-### Code Splitting
+1. **Clonar el repositorio e ingresar a la carpeta del proyecto**:
+   ```bash
+   cd sensorization
+   ```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+2. **Instalar las dependencias**:
+   ```bash
+   npm install
+   ```
 
-### Analyzing the Bundle Size
+3. **Iniciar el servidor de desarrollo**:
+   ```bash
+   npm start
+   ```
+   La aplicación estará disponible en [http://localhost:3000](http://localhost:3000).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+---
 
-### Making a Progressive Web App
+## 📜 Scripts Disponibles
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+En el directorio del proyecto puedes ejecutar:
 
-### Advanced Configuration
+- `npm start`: Ejecuta la aplicación en modo desarrollo.
+- `npm test`: Lanza el ejecutor de pruebas en modo interactivo.
+- `npm run build`: Compila la aplicación para producción en la carpeta `build`.
+- `npm run eject`: Remueve la dependencia única de construcción de `react-scripts`.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🧩 Mejoras pendientes
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Validación de datos de entrada. En el front no se hacen casi validaciones y se hacen casi todas en el back, esto se debería implementar en el front también para tener doble validación.
+- Dividir un poco mas los componentes en vez de reutilizarlos tanto. Por tiempo y lógica reducida he reutilizado muchos componentes, pero con esta lógica si la información cambia o crece impacta en muchas partes.
+- La visualización de datos es muuy plana, se podría mejorar el aspecto visual.
+- La persistencia de la sesión, cada vez que refrescas se pierde la sesión, con un localStorage se podría corregir.
+- La url esta hardcodeada, eso se puede mejorar parametrizándola
