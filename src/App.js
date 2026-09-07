@@ -1,23 +1,33 @@
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+import { RegisterForm } from './components/Forms/Register/RegisterForm';
+import { LoginForm } from './components/Forms/Login/LoginForm';
+import { SidebarComponent } from './components/Sensors/Sidebar/Sidebar';
 
 function App() {
+  const [isLogin, setIsLogin] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const toggleForm = () => {
+    setIsLogin(prev => !prev);
+  };
+
+  if (isAuthenticated) {
+    return (
+      <SidebarComponent onLogout={() => setIsAuthenticated(false)} />
+    );
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {isLogin ? (
+        <LoginForm
+          onSwitchForm={toggleForm}
+          onLoginSuccess={() => setIsAuthenticated(true)}
+        />
+      ) : (
+        <RegisterForm onSwitchForm={toggleForm} />
+      )}
     </div>
   );
 }

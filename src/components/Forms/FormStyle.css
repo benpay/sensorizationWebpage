@@ -1,0 +1,151 @@
+/* Contenedor principal que centra la tarjeta en la pantalla */
+.form-container {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8fafc;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+}
+
+/* Tarjeta estilo Card */
+.form-card {
+    background-color: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    border: 1px solid #e2e8f0;
+    width: 100%;
+    max-width: 400px;
+}
+
+/* Encabezado */
+.form-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.form-header h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin: 0 0 0.5rem 0;
+}
+
+.form-header p {
+    color: #64748b;
+    font-size: 0.95rem;
+    margin: 0;
+}
+
+/* Campos del Formulario */
+.form-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #1e293b;
+}
+
+/* Wrapper del Input con Iconos */
+.input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-wrapper input,
+.input-wrapper select {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background-color: #ffffff;
+    outline: none;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+}
+
+.input-wrapper input:focus,
+.input-wrapper select:focus {
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+.input-wrapper input::placeholder {
+    color: #94a3b8;
+}
+
+/* Iconos dentro del input */
+.input-icon.left-icon {
+    position: absolute;
+    left: 0.85rem;
+    color: #94a3b8;
+    pointer-events: none;
+}
+
+.toggle-password-btn {
+    position: absolute;
+    right: 0.85rem;
+    background: none;
+    border: none;
+    color: #94a3b8;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+}
+
+.toggle-password-btn:hover {
+    color: #64748b;
+}
+
+/* Botones */
+.btn-primary {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: #2563eb;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    margin-top: 0.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.btn-secondary {
+    width: 100%;
+    padding: 0.85rem;
+    background-color: transparent;
+    color: #2563eb;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+    background-color: #f8fafc;
+    border-color: #cbd5e1;
+}
