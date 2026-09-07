@@ -41,7 +41,7 @@ export const SidebarComponent = ({ onLogout }) => {
                             </button>
                             <button
                                 type="button"
-                                className={`menu-item ${formSensorMode === 'add' ? 'active' : ''}`}
+                                className={`menu-item ${formSensorMode === 'update' ? 'active' : ''}`}
                                 onClick={() => setFormSensorMode('update')}>
                                 <RefreshCw size={16} />
                                 <span>Actualizar</span>

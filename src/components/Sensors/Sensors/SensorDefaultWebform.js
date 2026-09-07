@@ -10,12 +10,13 @@ import '../../Forms/FormStyle.css';
 
 export const SensorWebform = ({ formSensorMode = 'add' }) => {
     const [sensorData, setSensorData] = useState({
-        name: '',
+        sensorName: '',
         sensorCode: '',
-        type: '',
-        status: '',
+        type: 'MANUAL_UPLOAD',
+        status: 'active',
         url: '',
     });
+    const { id, sensorCode, url, ...updateBody } = sensorData;
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [message, setMessage] = useState('');
     const handleSubmit = async (e) => {
@@ -23,18 +24,38 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
         setIsSubmitting(true);
         setMessage('');
 
-        const isAddMode = formSensorMode === 'add';
-        const endpoint = isAddMode
-            ? 'http://localhost:5000/sensors/registerSensor'
-            : `http://localhost:5000/sensors/updateSensorById/${sensorData.id}`;
+        let endpoint;
+        let method;
+        let body;
+        switch (formSensorMode) {
+            case 'add':
+                endpoint = 'http://localhost:5000/sensors/registerSensor';
+                method = 'POST';
+                body = JSON.stringify(sensorData);
+                break;
+            case 'update':
+                endpoint = `http://localhost:5000/sensors/updateSensorById/${sensorData.id}`;
+                method = 'PATCH';
+                body = JSON.stringify(updateBody)
+                break;
+            case 'list':
+                endpoint = 'http://localhost:5000/sensors/getSensors';
+                method = 'GET';
+                body = JSON.stringify(sensorData);
+                break;
+            default:
+                break;
+        }
+
 
         try {
             const response = await fetch(endpoint, {
-                method: 'POST',
+                method: method,
+                credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(sensorData)
+                body: body
             });
 
             const data = await response.json().catch(() => ({}));
@@ -65,6 +86,12 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
             button: 'Actualizar',
             loadingButton: 'Actualizando...'
         },
+        list: {
+            title: 'Lista de sensores',
+            description: 'Lista de sensores registrados',
+            button: 'Listar',
+            loadingButton: 'Consultando...'
+        },
         search: {
             title: 'Buscar sensor',
             description: 'Introduce los datos del sensor',
@@ -86,20 +113,6 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
             : action.button;
     }
 
-    // const [searchSensorId, setSearchSensorId] = useState('');
-    // const [searchSensorResults, setSearchSensorResults] = useState([]);
-    // const [isSearching, setIsSearching] = useState(false);
-
-    // const handleSearch = async () => {
-    //     try {
-    //         const response = await fetch(`http://localhost:5000/sensor/${searchSensorId}`);
-    //         const data = await response.json();
-    //         setSensorData(data);
-    //     } catch (error) {
-    //         setMessage(error.message || 'No se pudo conectar con el servidor.');
-    //     }
-    // }   
-
     return (
         <main className="main-content">
             <div className="page-header">
@@ -110,7 +123,6 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
             <div className="sensor-card">
                 <form onSubmit={handleSubmit} className="form-form">
                     {formSensorMode === 'update' ? (
-
                         <div className="form-group">
                             <label htmlFor="name">UUID del sensor</label>
                             <div className="input-wrapper">
@@ -121,12 +133,12 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
                                     name="id"
                                     placeholder="Ej: b10d9768-aed3-4973-a870-4d0edcb7adf8"
                                     value={sensorData.id}
-                                    onChange={(e) => setSensorData({ ...sensorData, name: e.target.value })}
+                                    onChange={(e) => setSensorData({ ...sensorData, id: e.target.value })}
                                     required
                                 />
                             </div>
                         </div>
-                    ) : <>  </> }
+                    ) : <>  </>}
                     <div className="form-group">
                         <label htmlFor="name">Nombre del sensor</label>
                         <div className="input-wrapper">
@@ -136,28 +148,30 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
                                 id="name"
                                 name="name"
                                 placeholder="Ej: temp002"
-                                value={sensorData.name}
-                                onChange={(e) => setSensorData({ ...sensorData, name: e.target.value })}
+                                value={sensorData.sensorName}
+                                onChange={(e) => setSensorData({ ...sensorData, sensorName: e.target.value })}
                                 required
                             />
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="sensorCode">Código del sensor</label>
-                        <div className="input-wrapper">
-                            <Hash className="input-icon left-icon" size={18} />
-                            <input
-                                type="text"
-                                id="sensorCode"
-                                name="sensorCode"
-                                placeholder="Ej: TS-001"
-                                value={sensorData.sensorCode}
-                                onChange={(e) => setSensorData({ ...sensorData, sensorCode: e.target.value })}
-                                required
-                            />
+                    {formSensorMode === 'add' ? (
+                        <div className="form-group">
+                            <label htmlFor="sensorCode">Código del sensor</label>
+                            <div className="input-wrapper">
+                                <Hash className="input-icon left-icon" size={18} />
+                                <input
+                                    type="text"
+                                    id="sensorCode"
+                                    name="sensorCode"
+                                    placeholder="Ej: TS-001"
+                                    value={sensorData.sensorCode}
+                                    onChange={(e) => setSensorData({ ...sensorData, sensorCode: e.target.value })}
+                                    required
+                                />
+                            </div>
                         </div>
-                    </div>
+                    ) : <>  </>}
 
                     <div className="form-group">
                         <label htmlFor="type">Tipo</label>
@@ -193,20 +207,22 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
                         </div>
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="url">URL</label>
-                        <div className="input-wrapper">
-                            <Link className="input-icon left-icon" size={18} />
-                            <input
-                                type="url"
-                                id="url"
-                                name="url"
-                                placeholder="Ej: http://sensorizacion:3050/sensors/ts-001"
-                                value={sensorData.url}
-                                onChange={(e) => setSensorData({ ...sensorData, url: e.target.value })}                                
-                            />
+                    {formSensorMode === 'add' ? (
+                        <div className="form-group">
+                            <label htmlFor="url">URL</label>
+                            <div className="input-wrapper">
+                                <Link className="input-icon left-icon" size={18} />
+                                <input
+                                    type="url"
+                                    id="url"
+                                    name="url"
+                                    placeholder="Ej: http://sensorizacion:3050/sensors/ts-001"
+                                    value={sensorData.url}
+                                    onChange={(e) => setSensorData({ ...sensorData, url: e.target.value })}
+                                />
+                            </div>
                         </div>
-                    </div>
+                    ) : <>  </>}
 
                     <button type="submit" className="btn-primary" disabled={isSubmitting}>
                         {buttonAction()}
