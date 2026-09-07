@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Lock } from 'lucide-react';
 import '../FormStyle.css';
+import { registerUser } from '../../../services/api';
 
 export const RegisterForm = ({ onSwitchForm }) => {
     const [formData, setFormData] = useState({
@@ -24,19 +25,7 @@ export const RegisterForm = ({ onSwitchForm }) => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:5000/register', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json().catch(() => ({}));
-
-            if (!response.ok) {
-                throw new Error(data.message || 'No se pudo completar el registro.');
-            }
+            const data = await registerUser(formData);
 
             setMessage(data.message || 'Registro completado correctamente.');
             setFormData({ email: '', password: '' });

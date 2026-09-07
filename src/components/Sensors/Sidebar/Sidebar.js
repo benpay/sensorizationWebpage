@@ -1,4 +1,6 @@
 import { SensorWebform } from '../Sensors/SensorDefaultWebform';
+import { ListSensors } from '../Sensors/ListDelSensors';
+import { IngestData } from '../Ingest/Ingestion';
 import { useState } from 'react';
 import './Sidebar.css';
 import {
@@ -13,6 +15,20 @@ import {
 
 export const SidebarComponent = ({ onLogout }) => {
     const [formSensorMode, setFormSensorMode] = useState('add');
+    const renderContent = () => {
+        switch (formSensorMode) {
+            case 'ingest':
+                return <IngestData />;
+            case 'search':
+            case 'list':
+            case 'delete':
+                return <ListSensors formSensorMode={formSensorMode} />;
+            case 'add':
+            case 'update':
+            default:
+                return <SensorWebform formSensorMode={formSensorMode} />;
+        }
+    };
 
     return (
         <div className="dashboard-container">
@@ -46,19 +62,31 @@ export const SidebarComponent = ({ onLogout }) => {
                                 <RefreshCw size={16} />
                                 <span>Actualizar</span>
                             </button>
-                            <button className='menu-item'>
+                            <button
+                                type="button"
+                                className={`menu-item ${formSensorMode === 'delete' ? 'active' : ''}`}
+                                onClick={() => setFormSensorMode('delete')}>
                                 <Trash2 size={16} />
                                 <span>Eliminar</span>
                             </button>
-                            <button className='menu-item'>
+                            <button
+                                type="button"
+                                className={`menu-item ${formSensorMode === 'list' ? 'active' : ''}`}
+                                onClick={() => setFormSensorMode('list')}>
                                 <List size={16} />
                                 <span>Listar</span>
                             </button>
-                            <button className='menu-item'>
+                            <button
+                                type="button"
+                                className={`menu-item ${formSensorMode === 'search' ? 'active' : ''}`}
+                                onClick={() => setFormSensorMode('search')}>
                                 <Search size={16} />
                                 <span>Buscar</span>
                             </button>
-                            <button className='menu-item'>
+                            <button
+                                type="button"
+                                className={`menu-item ${formSensorMode === 'ingest' ? 'active' : ''}`}
+                                onClick={() => setFormSensorMode('ingest')}>
                                 <CloudUpload size={16} />
                                 <span>Subir datos</span>
                             </button>
@@ -66,8 +94,8 @@ export const SidebarComponent = ({ onLogout }) => {
                     </div>
                 </aside>
 
-                {/* FORMULARIO DEL SENSOR*/}
-                <SensorWebform formSensorMode={formSensorMode} />
+
+                {renderContent()}
             </div>
         </div >
     );

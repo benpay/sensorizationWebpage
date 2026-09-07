@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { User, Lock } from 'lucide-react';
 import '../FormStyle.css';
+import { login } from '../../../services/api';
 
 export const LoginForm = ({ onSwitchForm, onLoginSuccess }) => {
     const [formData, setFormData] = useState({
@@ -24,20 +25,7 @@ export const LoginForm = ({ onSwitchForm, onLoginSuccess }) => {
         setIsSubmitting(true);
 
         try {
-            const response = await fetch('http://localhost:5000/login', {
-                method: 'POST',
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(formData)
-            });
-
-            const data = await response.json().catch(() => ({}));
-
-            if (!response.ok) {
-                throw new Error(data.message || 'No se pudo completar el login.');
-            }
+            const data = await login(formData);
 
             setMessage(data.message || 'Login completado correctamente.');
             setFormData({ email: '', password: '' });

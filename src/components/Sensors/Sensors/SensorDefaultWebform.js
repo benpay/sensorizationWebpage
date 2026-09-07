@@ -3,10 +3,10 @@ import {
     Hash,
     FileInputIcon,
     Link,
-    Settings,
-    Search
+    Settings
 } from 'lucide-react';
 import '../../Forms/FormStyle.css';
+import { getSensors, registerSensor, updateSensor } from '../../../services/api';
 
 export const SensorWebform = ({ formSensorMode = 'add' }) => {
     const [sensorData, setSensorData] = useState({
@@ -24,44 +24,21 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
         setIsSubmitting(true);
         setMessage('');
 
-        let endpoint;
-        let method;
-        let body;
-        switch (formSensorMode) {
-            case 'add':
-                endpoint = 'http://localhost:5000/sensors/registerSensor';
-                method = 'POST';
-                body = JSON.stringify(sensorData);
-                break;
-            case 'update':
-                endpoint = `http://localhost:5000/sensors/updateSensorById/${sensorData.id}`;
-                method = 'PATCH';
-                body = JSON.stringify(updateBody)
-                break;
-            case 'list':
-                endpoint = 'http://localhost:5000/sensors/getSensors';
-                method = 'GET';
-                body = JSON.stringify(sensorData);
-                break;
-            default:
-                break;
-        }
-
-
         try {
-            const response = await fetch(endpoint, {
-                method: method,
-                credentials: 'include',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: body
-            });
+            let data;
 
-            const data = await response.json().catch(() => ({}));
-
-            if (!response.ok) {
-                throw new Error(data.message || 'No se pudo registrar el sensor.');
+            switch (formSensorMode) {
+                case 'add':
+                    data = await registerSensor(sensorData);
+                    break;
+                case 'update':
+                    data = await updateSensor(sensorData.id, updateBody);
+                    break;
+                case 'list':
+                    data = await getSensors();
+                    break;
+                default:
+                    throw new Error('Acción de sensor no soportada.');
             }
 
             setMessage(data.message || 'Sensor registrado correctamente.');
@@ -148,8 +125,8 @@ export const SensorWebform = ({ formSensorMode = 'add' }) => {
                                 id="name"
                                 name="name"
                                 placeholder="Ej: temp002"
-                                value={sensorData.sensorName}
-                                onChange={(e) => setSensorData({ ...sensorData, sensorName: e.target.value })}
+                                value={sensorData.name}
+                                onChange={(e) => setSensorData({ ...sensorData, name: e.target.value })}
                                 required
                             />
                         </div>
